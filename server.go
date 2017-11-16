@@ -17,10 +17,12 @@ func main() {
 
 	redisHost := os.Getenv("REDIS_URL")
 	if redisHost == "" {
-		redisHost = ":6379"
+		redisHost = "redis://127.0.0.1:6379"
 	}
-	c, err := redis.Dial("tcp", redisHost)
-	_ = c
+	c, err := redis.DialURL(redisHost)
+	if (err == nil) {
+		defer c.Close()
+	}
 
 	r.GET("/redis", func(c *gin.Context) {
 		c.JSON(200, gin.H{
