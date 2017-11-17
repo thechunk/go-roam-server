@@ -2,7 +2,3 @@ language: go
 
 go:
     - 1.9.2
-
-before_install:
-    - go get -u -v github.com/kardianos/govendor
-    - govendor sync
