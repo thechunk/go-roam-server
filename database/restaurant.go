@@ -13,6 +13,7 @@ type Restaurant struct {
 	PriceRangeId string `redis:"rPriceRangeId"`
 	Price        string `redis:"rPrice"`
 	OpenRiceUrl  string `redis:"rOpenRiceUrl"`
+	Coords       Coords
 }
 
 type Coords struct {
@@ -75,6 +76,7 @@ func RestaurantsNearby(lat float64, lng float64, radius float64) (*[]Restaurant,
 		if err := redis.ScanStruct(raw, &restaurant); err != nil {
 			return nil, err
 		}
+		restaurant.Coords = (*positions)[restaurant.Key]
 		restaurants = append(restaurants, restaurant)
 	}
 
