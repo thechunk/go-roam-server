@@ -1,34 +1,36 @@
 package main
 
 import (
-	"os"
 	"github.com/gin-gonic/gin"
-	"github.com/garyburd/redigo/redis"
+	"github.com/thechunk/roam-server/controllers"
 )
 
-func main() {
-	r := gin.Default()
+type Engine struct {
+}
 
+func (r *Engine) GET(relativePath string, cb func(c *gin.Context)) []interface{} {
+	return nil
+}
+
+type EngineInterface interface {
+	GET(relativePath string, cb ...gin.HandlerFunc) gin.IRoutes
+	Run(s ...string) error
+}
+
+func startServer(r EngineInterface) {
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
 
-	redisHost := os.Getenv("REDIS_URL")
-	if redisHost == "" {
-		redisHost = "redis://127.0.0.1:6379"
-	}
-	c, err := redis.DialURL(redisHost)
-	if (err == nil) {
-		defer c.Close()
-	}
+	r.GET("/api/v1/restaurants", controllers.RestaurantsNearbyController())
+	r.GET("/api/v1/restaurants/:id", controllers.RestaurantByIdController())
 
-	r.GET("/redis", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"error": err,
-		})
-	})
+	r.Run()
+}
 
-	r.Run();
+func main() {
+	r := gin.Default()
+	startServer(r)
 }
