@@ -6,6 +6,7 @@ import (
 )
 
 type Restaurant struct {
+	Key          string `redis:"rKey"`
 	Name         string `redis:"rName"`
 	SetId        string `redis:"rSetId"`
 	Address1     string `redis:"rAddress1"`
