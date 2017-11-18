@@ -3,7 +3,7 @@ language: go
 go:
   - 1.9.2
 
-install: 
+before_install: 
   - go get -u github.com/kardianos/govendor
   - cd $HOME/gopath/src/github.com/thechunk/go-roam-server && govendor sync
 
